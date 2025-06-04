@@ -21,6 +21,9 @@ type IconSymbolName = keyof typeof MAPPING
  * - see SF Symbols in the [SF Symbols](https://developer.apple.com/sf-symbols/) app.
  */
 const MAPPING = {
+	'camera.fill': 'camera',
+	'arrow.right': 'arrow-right',
+	'arrow.left': 'arrow-left',
 	'house.fill': 'home',
 	'star.square.fill': 'grade',
 	'paperplane.fill': 'send',
