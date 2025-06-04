@@ -15,10 +15,11 @@ export default function TabLayout() {
 				headerShown: false,
 				tabBarButton: HapticTab,
 				tabBarStyle: {
-					marginBottom: 50,
+					marginBottom: 60,
 					borderRadius: 20,
 					height: 70,
 					marginHorizontal: 30,
+					position: 'absolute'
 				},
 			}}
 		>
