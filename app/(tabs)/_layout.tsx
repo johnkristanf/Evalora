@@ -38,15 +38,16 @@ export default function TabLayout() {
 			/>
 
 			<Tabs.Screen
-				name="grade"
+				name="rubric"
 				options={{
-					title: 'Grade',
+					title: 'Rubric',
 					tabBarIcon: ({ color }) => (
 						<IconSymbol
 							size={28}
 							name="star.square.fill"
 							color={color}
 						/>
+
 					),
 				}}
 			/>

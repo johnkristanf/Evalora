@@ -1,9 +1,12 @@
 import { colors } from '@/constant/colors'
+import { apiV1 } from '@/lib/api'
+import { useMutation } from '@tanstack/react-query'
 import { useState } from 'react'
 import { Image, Pressable, View } from 'react-native'
 import { Appbar, Avatar } from 'react-native-paper'
 import { Dropdown } from 'react-native-paper-dropdown'
 import { ThemedText } from './ThemedText'
+import { essayTypesOptions, gradingLevelsOptions } from '@/constant/dropdowns'
 
 export default function CapturedEssayImage({ imageURI }: { imageURI: string }) {
 	console.log('imageURI: ', imageURI)
@@ -14,12 +17,43 @@ export default function CapturedEssayImage({ imageURI }: { imageURI: string }) {
 		{ label: 'Other', value: 'other' },
 	]
 
-	const [gender, setGender] = useState<string>()
+	const [gender, setGender] = useState<string>();
+	const [gradinglevel, setGradinglevel] = useState<string>();
+	const [essayType, setEssayType] = useState<string>();
 
 	console.log('gender: ', gender)
 
+	const mutation = useMutation({
+		mutationFn: async (formData: FormData) => {
+			const response = await apiV1.post('/essay/camera/check', formData, {
+				headers: { 'Content-Type': 'multipart/form-data' },
+			})
+			return response.data
+		},
+		onSuccess: (data) => {
+			console.log('Uploaded:', data)
+		},
+		onError: (error) => {
+			console.error('Upload failed:', error)
+		},
+	})
+
+
+	// SUBMIT ESSAY GRADING HANDLER
 	const handleSubmitEssay = () => {
 		console.log('gender: ', gender)
+		console.log('gradingLevel: ', gradinglevel)
+		console.log('essayType: ', essayType)
+
+		const formData = new FormData()
+
+		formData.append('file', {
+			uri: imageURI,
+			name: 'essay.jpg',
+			type: 'image/jpeg',
+		} as any) // type cast to fix TS issue with FormData and file
+
+		mutation.mutate(formData)
 	}
 
 	return (
@@ -55,7 +89,7 @@ export default function CapturedEssayImage({ imageURI }: { imageURI: string }) {
 			</View>
 
 			{/* GRADING RUBRICS SELECTION AREA */}
-			<View className="bg-white rounded-t-3xl mt-8 pt-4 w-full" style={{ paddingHorizontal: 20, minHeight: 300 }}>
+			<View className="bg-white rounded-t-3xl mt-8 pt-4 w-full" style={{ paddingHorizontal: 20, minHeight: 450 }}>
 				<View className="flex-col gap-3 ">
 					<ThemedText className="text-2xl text-center" style={{ color: colors.primary }}>
 						Select grading rubric:
@@ -68,7 +102,15 @@ export default function CapturedEssayImage({ imageURI }: { imageURI: string }) {
 
 				<View className="flex-col gap-5 mt-8">
 					<View className="w-full mb-4 ">
-						<Dropdown label="Gender" placeholder="Select Gender" options={OPTIONS} value={gender} onSelect={setGender} />
+						<Dropdown label="Rubric" options={OPTIONS} value={gender} onSelect={setGender} />
+					</View>
+
+					<View className="w-full mb-4 ">
+						<Dropdown label="Grading Level" options={gradingLevelsOptions} value={gradinglevel} onSelect={setGradinglevel} />
+					</View>
+
+					<View className="w-full mb-4 ">
+						<Dropdown label="Essaay Type" options={essayTypesOptions} value={essayType} onSelect={setEssayType} />
 					</View>
 
 					<Pressable

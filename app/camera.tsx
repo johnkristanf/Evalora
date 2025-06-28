@@ -17,21 +17,7 @@ export default function CameraScreen() {
 		setFacing((current) => (current === 'back' ? 'front' : 'back'))
 	}
 
-	const { mutate: submitEssay, isPending } = useMutation({
-		mutationFn: async (formData: FormData) => {
-			const response = await apiV1.post('/essay/camera/check', formData, {
-				headers: { 'Content-Type': 'multipart/form-data' },
-			})
-			return response.data
-		},
-		onSuccess: (data) => {
-			console.log('Uploaded:', data)
-			// maybe navigate or show success
-		},
-		onError: (error) => {
-			console.error('Upload failed:', error)
-		},
-	})
+	
 
 	const takePicture = async () => {
 		const photo = await cameraRef.current?.takePictureAsync({
@@ -43,15 +29,7 @@ export default function CameraScreen() {
 
 		setImageURI(photo?.uri)
 
-		// const formData = new FormData()
-
-		// formData.append('file', {
-		// 	uri: photo.uri,
-		// 	name: 'essay.jpg',
-		// 	type: 'image/jpeg',
-		// } as any) // type cast to fix TS issue with FormData and file
-
-		// submitEssay(formData)
+		
 	}
 
 	if (!permission) return null
